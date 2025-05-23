@@ -24,8 +24,8 @@ jobs:
         run: npm install -g swagger-cli redoc-cli
 
       # OpenAPIドキュメントをSwagger UI で生成
-      - name: Generate OpenAPI Docs (Doc2 with Redoc)
-        run: redoc-cli bundle backend/docs/03_webApp_IF/API.yaml -o public/backend/webapi.html
+      # - name: Generate OpenAPI Docs (Doc2 with Redoc)
+      #   run: redoc-cli bundle backend/docs/03_webApp_IF/API.yaml -o public/backend/webapi.html
 
       # `gh-pages` ブランチにデプロイ
       - name: Deploy to GitHub Pages
