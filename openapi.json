@@ -1,92 +1,27 @@
 {
-  "openapi": "3.0.3",
+  "swagger": "2.0",
   "info": {
-    "title": "Sample API",
+    "title": "Simple Demo API",
     "version": "1.0.0",
-    "description": "This is a sample API to test GitHub Pages with Swagger UI"
+    "description": "A minimal API for demo purpose"
   },
-  "servers": [
-    {
-      "url": "https://api.example.com/v1",
-      "description": "Main server"
-    }
-  ],
   "paths": {
-    "/users": {
+    "/hello": {
       "get": {
-        "summary": "Get list of users",
+        "summary": "Returns a greeting message",
+        "operationId": "getHello",
         "responses": {
           "200": {
-            "description": "Successful response with user list",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "name": {
-                        "type": "string",
-                        "example": "John Doe"
-                      },
-                      "email": {
-                        "type": "string",
-                        "example": "johndoe@example.com"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/users/{id}": {
-      "get": {
-        "summary": "Get user information by ID",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
+            "description": "Successful response",
             "schema": {
-              "type": "integer"
-            },
-            "description": "User ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User information",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "example": 1
-                    },
-                    "name": {
-                      "type": "string",
-                      "example": "John Doe"
-                    },
-                    "email": {
-                      "type": "string",
-                      "example": "johndoe@example.com"
-                    }
-                  }
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Hello, world!"
                 }
               }
             }
-          },
-          "404": {
-            "description": "User not found"
           }
         }
       }
