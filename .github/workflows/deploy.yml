@@ -21,7 +21,7 @@ jobs:
 
       # OpenAPIドキュメント用の依存関係をインストール
       - name: Install Swagger UI CLI
-        run: npm install -g swagger-cli redoc-cli
+        run: npm install -g swagger-cli @redocly/cli
 
       # bufcliをインストール
       - name: Install buf CLI
@@ -45,10 +45,10 @@ jobs:
           buf generate
 
       # OpenAPIドキュメントをSwagger UI で生成
-      - name: Generate HTML docs from OpenAPI JSON with redoc-cli
+      - name: Generate HTML docs from OpenAPI JSON
         run: |
           mkdir -p public
-          redoc-cli bundle gen/proto/openapi.swagger.json -o public/index.html
+          redocly build-docs gen/proto/openapi.swagger.json --output public/index.html
 
       # `gh-pages` ブランチにデプロイ
       - name: Deploy docs to GitHub Pages
