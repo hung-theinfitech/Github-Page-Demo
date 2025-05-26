@@ -48,7 +48,7 @@ jobs:
       - name: Generate HTML docs from OpenAPI JSON
         run: |
           mkdir -p public
-          redocly build-docs gen/proto/openapi.swagger.json --output public/index.html
+          redocly build-docs proto/gen/proto/openapi.swagger.json --output public/index.html
 
       # `gh-pages` ブランチにデプロイ
       - name: Deploy docs to GitHub Pages
