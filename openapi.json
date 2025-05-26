@@ -16,6 +16,38 @@
     "application/json"
   ],
   "paths": {
+    "/v1/organizations": {
+      "post": {
+        "operationId": "OrganizationService_CreateOrganization",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1OrganizationResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateOrganizationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "OrganizationService"
+        ]
+      }
+    },
     "/v1/organizations/{id}": {
       "get": {
         "operationId": "OrganizationService_GetOrganization",
@@ -73,6 +105,17 @@
             "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
+        }
+      }
+    },
+    "v1CreateOrganizationRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
         }
       }
     },
