@@ -11,22 +11,10 @@ service OrganizationService {
       get: "/v1/organizations/{id}"
     };
   }
-
-  rpc CreateOrganization(CreateOrganizationRequest) returns (OrganizationResponse) {
-    option (google.api.http) = {
-      post: "/v1/organizations"
-      body: "*"
-    };
-  }
 }
 
 message GetOrganizationRequest {
   string id = 1;
-}
-
-message CreateOrganizationRequest {
-  string id = 1;
-  string name = 2;
 }
 
 message OrganizationResponse {
