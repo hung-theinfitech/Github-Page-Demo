@@ -21,7 +21,7 @@ jobs:
 
       # OpenAPIドキュメント用の依存関係をインストール
       - name: Install Swagger UI CLI
-        run: npm install -g swagger-cli @redocly/cli
+        run: npm install -g swagger-cli
 
       # bufcliをインストール
       - name: Install buf CLI
@@ -48,11 +48,11 @@ jobs:
       - name: Generate HTML docs from OpenAPI JSON
         run: |
           mkdir -p public
-          redocly build-docs proto/gen/proto/openapi.swagger.json --output public/index.html
+          cp proto/gen/proto/openapi.swagger.json docs/openapi.json
 
       # `gh-pages` ブランチにデプロイ
       - name: Deploy docs to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: public
+          publish_dir: docs
