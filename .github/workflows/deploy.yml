@@ -23,13 +23,36 @@ jobs:
       - name: Install Swagger UI CLI
         run: npm install -g swagger-cli redoc-cli
 
+      # bufcliをインストール
+      - name: Install buf CLI
+        run: |
+          curl -sSL "https://github.com/bufbuild/buf/releases/latest/download/buf-Linux-x86_64" -o /usr/local/bin/buf
+          chmod +x /usr/local/bin/buf
+          buf --version
+
+      # Googleの標準protobufライブラリをクローン
+      - name: Clone googleapis repo (third party deps)
+        run: |
+          if [ ! -d "third_party/googleapis" ]; then
+            git clone https://github.com/googleapis/googleapis.git third_party/googleapis
+          fi
+
+      # OpenAPIドキュメントを生成する
+      - name: Generate OpenAPI JSON with buf
+        working-directory: proto
+        run: |
+          buf mod update
+          buf generate
+
       # OpenAPIドキュメントをSwagger UI で生成
-      # - name: Generate OpenAPI Docs (Doc2 with Redoc)
-      #   run: redoc-cli bundle backend/docs/03_webApp_IF/API.yaml -o public/backend/webapi.html
+      - name: Generate HTML docs from OpenAPI JSON with redoc-cli
+        run: |
+          mkdir -p public
+          redoc-cli bundle gen/proto/openapi.swagger.json -o public/index.html
 
       # `gh-pages` ブランチにデプロイ
-      - name: Deploy to GitHub Pages
+      - name: Deploy docs to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs
+          publish_dir: public
