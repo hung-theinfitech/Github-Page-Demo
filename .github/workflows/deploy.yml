@@ -1,16 +1,15 @@
 name: Deploy AsyncAPI Docs
 
+name: Deploy AsyncAPI Docs
+
 on:
   push:
     branches:
-      - "**"
-  pull_request:
-    types: [closed]
+      - dev
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
 
     steps:
       - name: Checkout repository
@@ -53,23 +52,12 @@ jobs:
           mkdir -p public
           cp proto/gen/proto/openapi.swagger.json docs/openapi.json
 
-      # Set target branch based on source branch
-      - name: Set target branch
-        id: target-branch
-        run: |
-          if [ "${{ github.ref_name }}" = "dev" ]; then
-            echo "branch=gh-pages" >> $GITHUB_OUTPUT
-          else
-            echo "branch=${{ github.ref_name }}-review" >> $GITHUB_OUTPUT
-          fi
-
-      # `gh-pages` ブランチにデプロイ (dev branch) or `{branch}-review` ブランチにデプロイ (other branches)
+      # `gh-pages` ブランチにデプロイ
       - name: Deploy docs to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: docs
-          publish_branch: ${{ steps.target-branch.outputs.branch }}
 
   cleanup-review-branch:
     runs-on: ubuntu-latest
