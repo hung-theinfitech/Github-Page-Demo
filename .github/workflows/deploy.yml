@@ -50,7 +50,6 @@ jobs:
       #     mkdir -p public
       #     cp proto/gen/proto/openapi.swagger.json docs/openapi.json
 
-
       # `gh-pages` ブランチにデプロイ (dev branch) or `{branch}-review` ブランチにデプロイ (other branches)
       - name: Deploy docs to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
