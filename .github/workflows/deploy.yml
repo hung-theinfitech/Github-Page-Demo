@@ -51,10 +51,19 @@ jobs:
       #     cp proto/gen/proto/openapi.swagger.json docs/openapi.json
 
       # `gh-pages` ブランチにデプロイ (dev branch) or `{branch}-review` ブランチにデプロイ (other branches)
-      - name: Deploy docs to GitHub Pages
+      - name: Deploy to GitHub Pages (dev branch)
+        if: github.ref_name == 'dev'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
-          destination_dir: ${{ github.ref_name != 'dev'}}
           publish_branch: gh-pages
+
+      - name: Deploy to GitHub Pages (other branches)
+        if: github.ref_name != 'dev'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          publish_branch: gh-pages
+          destination_dir: ${{ github.ref_name }}
