@@ -3,11 +3,12 @@ name: Deploy AsyncAPI Docs
 on:
   push:
     branches:
-      - dev
+      - "**"
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
 
     steps:
       - name: Checkout repository
@@ -23,60 +24,39 @@ jobs:
       - name: Install Swagger UI CLI
         run: npm install -g swagger-cli
 
-      # bufcliをインストール
-      - name: Install buf CLI
-        run: |
-          curl -sSL "https://github.com/bufbuild/buf/releases/latest/download/buf-Linux-x86_64" -o /usr/local/bin/buf
-          chmod +x /usr/local/bin/buf
-          buf --version
+      # # bufcliをインストール
+      # - name: Install buf CLI
+      #   run: |
+      #     curl -sSL "https://github.com/bufbuild/buf/releases/latest/download/buf-Linux-x86_64" -o /usr/local/bin/buf
+      #     chmod +x /usr/local/bin/buf
+      #     buf --version
 
-      # Googleの標準protobufライブラリをクローン
-      - name: Clone googleapis repo (third party deps)
-        run: |
-          if [ ! -d "third_party/googleapis" ]; then
-            git clone https://github.com/googleapis/googleapis.git third_party/googleapis
-          fi
+      # # Googleの標準protobufライブラリをクローン
+      # - name: Clone googleapis repo (third party deps)
+      #   run: |
+      #     if [ ! -d "third_party/googleapis" ]; then
+      #       git clone https://github.com/googleapis/googleapis.git third_party/googleapis
+      #     fi
 
-      # OpenAPIドキュメントを生成する
-      - name: Generate OpenAPI JSON with buf
-        working-directory: proto
-        run: |
-          buf mod update
-          buf generate
+      # # OpenAPIドキュメントを生成する
+      # - name: Generate OpenAPI JSON with buf
+      #   working-directory: proto
+      #   run: |
+      #     buf mod update
+      #     buf generate
 
-      # OpenAPIドキュメントをSwagger UI で生成
-      - name: Generate HTML docs from OpenAPI JSON
-        run: |
-          mkdir -p public
-          cp proto/gen/proto/openapi.swagger.json docs/openapi.json
+      # # OpenAPIドキュメントをSwagger UI で生成
+      # - name: Generate HTML docs from OpenAPI JSON
+      #   run: |
+      #     mkdir -p public
+      #     cp proto/gen/proto/openapi.swagger.json docs/openapi.json
 
-      # `gh-pages` ブランチにデプロイ
+
+      # `gh-pages` ブランチにデプロイ (dev branch) or `{branch}-review` ブランチにデプロイ (other branches)
       - name: Deploy docs to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs
-
-  cleanup-review-branch:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Delete review branch
-        run: |
-          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
-          REVIEW_BRANCH="${BRANCH_NAME}-review"
-          echo "Checking if review branch exists: $REVIEW_BRANCH"
-          if git ls-remote --heads origin "$REVIEW_BRANCH" | grep -q "$REVIEW_BRANCH"; then
-            echo "Deleting review branch: $REVIEW_BRANCH"
-            git push origin --delete "$REVIEW_BRANCH"
-            echo "Successfully deleted review branch: $REVIEW_BRANCH"
-          else
-            echo "Review branch $REVIEW_BRANCH does not exist, skipping deletion"
-          fi
+          publish_dir: ./docs
+          destination_dir: ${{ github.ref_name }}
+          publish_branch: gh-pages
