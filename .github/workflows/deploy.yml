@@ -60,10 +60,10 @@ jobs:
           if [ "${{ github.ref_name }}" = "dev" ]; then
             echo "branch=gh-pages" >> $GITHUB_OUTPUT
           else
-            echo "branch=${{ github.ref_name }}/review" >> $GITHUB_OUTPUT
+            echo "branch=${{ github.ref_name }}-review" >> $GITHUB_OUTPUT
           fi
 
-      # `gh-pages` ブランチにデプロイ (dev branch) or `{branch}/review` ブランチにデプロイ (other branches)
+      # `gh-pages` ブランチにデプロイ (dev branch) or `{branch}-review` ブランチにデプロイ (other branches)
       - name: Deploy docs to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -85,11 +85,8 @@ jobs:
       - name: Delete review branch
         run: |
           BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
-          REVIEW_BRANCH="${BRANCH_NAME}/review"
-
+          REVIEW_BRANCH="${BRANCH_NAME}-review"
           echo "Checking if review branch exists: $REVIEW_BRANCH"
-
-          # Check if the review branch exists
           if git ls-remote --heads origin "$REVIEW_BRANCH" | grep -q "$REVIEW_BRANCH"; then
             echo "Deleting review branch: $REVIEW_BRANCH"
             git push origin --delete "$REVIEW_BRANCH"
