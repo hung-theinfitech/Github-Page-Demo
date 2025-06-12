@@ -1,7 +1,5 @@
 name: Deploy AsyncAPI Docs
 
-name: Deploy AsyncAPI Docs
-
 on:
   push:
     branches:
