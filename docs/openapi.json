@@ -1130,14 +1130,6 @@
           "type": "boolean"
         }
       }
-    },
-    "v1UpdateUserResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
-        }
-      }
     }
   }
 }
