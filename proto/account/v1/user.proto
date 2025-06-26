@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package account.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "gen/go/account/v1;v1";
+
+service UserService {
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {get: "/v1/users/{id}"};
+  }
+
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post: "/v1/users"
+      body: "*"
+    };
+  }
+
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+    option (google.api.http) = {get: "/v1/users"};
+  }
+
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+    option (google.api.http) = {
+      put: "/v1/users/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
+    option (google.api.http) = {delete: "/v1/users/{id}"};
+  }
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message CreateUserRequest {
+  string name = 1;
+  string email = 2;
+  string organization_id = 3;
+  repeated string user_role_ids = 4;
+}
+
+message UserRoleResponse {
+  string id = 1;
+  string name = 2;
+}
+
+message GetUserResponse {
+  string id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string first_name_kana = 4;
+  string last_name_kana = 5;
+  string email = 6;
+  repeated UserRoleResponse roles = 7;
+}
+
+message ListUsersRequest {
+  string name = 1; // filter by name (partial match or exact)
+  string email = 2; // filter by email
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message ListUsersResponse {
+  repeated GetUserResponse users = 1;
+}
+
+message CreateUserResponse {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+}
+
+message UpdateUserRequest {
+  string id = 1;
+  repeated string role_ids = 2;
+}
+
+message UpdateUserResponse {
+  string message = 1;
+}
+
+message DeleteUserRequest {
+  string id = 1;
+}
+
+message DeleteUserResponse {
+  string message = 1;
+}
