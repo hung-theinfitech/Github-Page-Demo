@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package account.v1;
+
+import "account/v1/permission.proto";
+import "google/api/annotations.proto";
+
+option go_package = "gen/go/account/v1;v1";
+
+service RoleService {
+  rpc CheckRolesExist(CheckRolesExistRequest) returns (CheckRolesExistResponse) {
+    option (google.api.http) = {
+      post: "/v1/roles/check"
+      body: "*"
+    };
+  }
+
+  rpc ListRoles(ListRolesRequest) returns (ListRolesResponse) {
+    option (google.api.http) = {get: "/v1/role"};
+  }
+
+  rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse) {
+    option (google.api.http) = {
+      post: "/v1/role"
+      body: "*"
+    };
+  }
+
+  rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse) {
+    option (google.api.http) = {
+      put: "/v1/role/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleResponse) {
+    option (google.api.http) = {delete: "/v1/role/{id}"};
+  }
+}
+
+message CheckRolesExistRequest {
+  repeated string role_ids = 1;
+}
+
+message CheckRolesExistResponse {
+  bool exists = 1;
+}
+
+message Role {
+  string name = 1;
+  string entity_id = 2;
+  bool is_preset_role = 3;
+  repeated Permission permissions = 4;
+}
+
+message ListRolesRequest {
+  string next_page_token = 1;
+  int32 limit = 2;
+}
+
+message ListRolesResponse {
+  bool has_more = 1;
+  string next_page_token = 2;
+  repeated Role data = 3;
+}
+
+message CreateRoleRequest {
+  string id = 1;
+  string name = 2;
+  bool is_preset_role = 3;
+  repeated string policies = 4;
+  repeated string role_ids = 5;
+  string organization_id = 6;
+}
+
+message CreateRoleResponse {
+  string id = 1;
+  string name = 2;
+  bool is_preset_role = 3;
+  repeated Permission permissions = 4;
+}
+
+message UpdateRoleRequest {
+  string id = 1;
+  string name = 2;
+  bool is_preset_role = 3;
+}
+
+message UpdateRoleResponse {
+  bool success = 1;
+}
+
+message DeleteRoleRequest {
+  string id = 1;
+}
+
+message DeleteRoleResponse {
+  bool success = 1;
+}

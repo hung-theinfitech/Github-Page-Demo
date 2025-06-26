@@ -3,6 +3,8 @@ name: Update PR Template Placeholders
 on:
   pull_request:
     types: [opened]
+    paths:
+      - "docs/**"
 
 jobs:
   replace-placeholder:
